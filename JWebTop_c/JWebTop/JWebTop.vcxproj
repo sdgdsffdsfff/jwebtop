@@ -124,8 +124,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4100;4127;4244;4512;4701;4702;4996</DisableSpecificWarnings>
-      <ExceptionHandling>
-      </ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -153,7 +152,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\Release\libcef.lib;..\libcef_dll\Release\libcef_dll_wrapper.lib;comctl32.lib;rpcrt4.lib;shlwapi.lib;..\Release\cef_sandbox.lib;dbghelp.lib;psapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\Release\libcef.lib;..\libcef_dll\Release\libcef_dll_wrapper.lib;comctl32.lib;rpcrt4.lib;shlwapi.lib;..\Release\cef_sandbox.lib;dbghelp.lib;psapi.lib;..\$(Configuration)\JWebTopCommon.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -162,27 +161,30 @@
       <SubSystem>Windows</SubSystem>
       <Version>
       </Version>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>Xcopy  "$(ProjectDir)tests\music" "$(ProjectDir)$(Configuration)\" /S /D /Y</Command>
+      <Command>Xcopy  "$(SolutionDir)common\tests\music" "$(ProjectDir)$(Configuration)\" /S /D /Y
+copy $(ProjectDir)$(Configuration)\$(ProjectName).exe  $(SolutionDir)\JWebTop_JNI\$(Configuration)\$(ProjectName).exe /Y
+del $(SolutionDir)..\demos\JWebTop_CSharp_Demo\bin\$(Configuration)\$(ProjectName).exe /Q
+copy $(ProjectDir)$(Configuration)\$(ProjectName).exe  $(SolutionDir)..\demos\JWebTop_CSharp_Demo\bin\$(Configuration)\$(ProjectName).exe /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='发布版本|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AssemblerListingLocation>$(Configuration)/</AssemblerListingLocation>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4100;4127;4244;4512;4701;4702;4996</DisableSpecificWarnings>
-      <ExceptionHandling>
-      </ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -191,9 +193,7 @@
       <WarningLevel>Level4</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;_NDEBUG;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;WIN32;_WIN32;_WINDOWS;UNICODE;_UNICODE;WINVER=0x0602;_WIN32_WINNT=0x602;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;PSAPI_VERSION=1;CEF_USE_ATL;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;_NDEBUG;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;WIN32;_WIN32;_WINDOWS;UNICODE;_UNICODE;WINVER=0x0602;_WIN32_WINNT=0x602;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;PSAPI_VERSION=1;CEF_USE_SANDBOX;CEF_USE_ATL;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -208,9 +208,9 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\Release\libcef.lib;..\libcef_dll\Release\libcef_dll_wrapper.lib;comctl32.lib;rpcrt4.lib;shlwapi.lib;..\Release\cef_sandbox.lib;..\Release\jsoncpp.lib;dbghelp.lib;psapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\Release\libcef.lib;..\libcef_dll\Release\libcef_dll_wrapper.lib;comctl32.lib;rpcrt4.lib;shlwapi.lib;..\Release\cef_sandbox.lib;dbghelp.lib;psapi.lib;..\$(Configuration)\JWebTopCommon.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>$(ProjectDir)$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <ProgramDataBaseFile>$(ProjectDir)$(Configuration)\$(ProjectName).pdb</ProgramDataBaseFile>
@@ -223,31 +223,49 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>Xcopy  "$(ProjectDir)tests\music" "$(ProjectDir)$(Configuration)\" /S /D /Y</Command>
+      <Command>Xcopy  "$(SolutionDir)common\tests\music" "$(ProjectDir)$(Configuration)\" /S /D /Y
+copy $(ProjectDir)$(Configuration)\$(ProjectName).exe  $(SolutionDir)\JWebTop_JNI\$(Configuration)\$(ProjectName).exe /Y
+del $(SolutionDir)..\demos\JWebTop_CSharp_Demo\bin\$(Configuration)\$(ProjectName).exe /Q
+copy $(ProjectDir)$(Configuration)\$(ProjectName).exe  $(SolutionDir)..\demos\JWebTop_CSharp_Demo\bin\$(Configuration)\$(ProjectName).exe /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\ui\dlgs\InputDialog.cpp" />
     <ClCompile Include="browser\JWebTopApp.cpp" />
     <ClCompile Include="browser\JWebTopCommons.cpp" />
     <ClCompile Include="browser\JWebTopClient.cc" />
+    <ClCompile Include="browser\JWebTopContext.cc" />
     <ClCompile Include="browser\JWebTopRenderer.cc" />
+    <ClCompile Include="browser\JWebTopScheme.cpp" />
+    <ClCompile Include="config\JWebTopConfigs.cpp" />
+    <ClCompile Include="dllex\DLLExState.cpp" />
+    <ClCompile Include="dllex\DLLEx_Browser.cpp" />
+    <ClCompile Include="dllex\DLLEx_Renderer.cpp" />
+    <ClCompile Include="jshandler\JSDialogHandler.cc" />
     <ClCompile Include="jshandler\JWebTopJSHanlder.cpp" />
     <ClCompile Include="JWebTop_main.cpp" />
-    <ClCompile Include="tests\TestUtil.cpp" />
-    <ClCompile Include="util\StrUtil.cpp" />
-    <ClCompile Include="winctrl\JWebTopConfigs.cpp" />
-    <ClCompile Include="winctrl\JWebTopWinCtrl.cpp" />
+    <ClCompile Include="wndproc\JWebTopWndProc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\JWebTopMsg.h" />
+    <ClInclude Include="..\common\ui\dlgs\InputDialog.h" />
     <ClInclude Include="browser\JWebTopApp.h" />
     <ClInclude Include="browser\JWebTopCommons.h" />
     <ClInclude Include="browser\JWebTopClient.h" />
+    <ClInclude Include="browser\JWebTopContext.h" />
+    <ClInclude Include="browser\JWebTopScheme.h" />
+    <ClInclude Include="config\JWebTopConfigs.h" />
+    <ClInclude Include="dllex\DLLExState.h" />
+    <ClInclude Include="dllex\JWebTop_DLLEx.h" />
     <ClInclude Include="jshandler\JJH_Windows.h" />
+    <ClInclude Include="jshandler\JSDialogHandler.h" />
     <ClInclude Include="jshandler\JWebTopJSHanlder.h" />
-    <ClInclude Include="tests\TestUtil.h" />
-    <ClInclude Include="util\StrUtil.h" />
-    <ClInclude Include="winctrl\JWebTopConfigs.h" />
-    <ClInclude Include="winctrl\JWebTopWinCtrl.h" />
+    <ClInclude Include="wndproc\JWebTopWndProc.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JWebTopCommon\JWebTopCommon.vcxproj">
+      <Project>{6bd8e842-723a-47ba-83a4-fa357465dc13}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

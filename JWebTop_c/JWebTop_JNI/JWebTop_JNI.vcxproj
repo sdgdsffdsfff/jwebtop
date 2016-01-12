@@ -60,7 +60,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)\mid</IntDir>
+    <IntDir>$(ProjectDir)$(Configuration)\mid\</IntDir>
     <GenerateManifest>false</GenerateManifest>
     <TargetName>JWebTop</TargetName>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -68,13 +68,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='发布版本|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)\mid</IntDir>
+    <IntDir>$(ProjectDir)$(Configuration)\mid\</IntDir>
     <GenerateManifest>false</GenerateManifest>
     <TargetName>JWebTop</TargetName>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\third_party\wtl\include;.;..\..\..\third_party\directxsdk\files\Include;..\..\..\third_party\platformsdk_win7\files\Include;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.$(SolutionDir);$(ProjectDir);.\..\..\third_party\wtl\include;.;..\..\..\third_party\directxsdk\files\Include;..\..\..\third_party\platformsdk_win7\files\Include;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP /we4389 %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -176,13 +177,12 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP /we4389 %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4100;4127;4244;4512;4701;4702;4996</DisableSpecificWarnings>
-      <ExceptionHandling>
-      </ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <MinimalRebuild>false</MinimalRebuild>
@@ -207,7 +207,7 @@
       <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\Release\libcef.lib;..\libcef_dll\Release\libcef_dll_wrapper.lib;comctl32.lib;rpcrt4.lib;shlwapi.lib;..\Release\cef_sandbox.lib;dbghelp.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;comctl32.lib;rpcrt4.lib;shlwapi.lib;dbghelp.lib;psapi.lib;..\$(Configuration)\JWebTopCommon.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
       <DelayLoadDLLs>
@@ -252,19 +252,18 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP /we4389 %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4100;4127;4244;4512;4701;4702;4996</DisableSpecificWarnings>
-      <ExceptionHandling>
-      </ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <MinimalRebuild>true</MinimalRebuild>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
       <OmitFramePointers>false</OmitFramePointers>
-      <PreprocessorDefinitions>JWebTopJNI;NDEBUG;_NDEBUG;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;WIN32;_WIN32;_WINDOWS;UNICODE;_UNICODE;WINVER=0x0602;_WIN32_WINNT=0x602;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;PSAPI_VERSION=1;CEF_USE_ATL;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_NDEBUG;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;WIN32;_WIN32;_WINDOWS;UNICODE;_UNICODE;WINVER=0x0602;_WIN32_WINNT=0x602;NOMINMAX;WIN32_LEAN_AND_MEAN;_HAS_EXCEPTIONS=0;PSAPI_VERSION=1;CEF_USE_ATL;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <StringPooling>true</StringPooling>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -275,16 +274,16 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AssemblerListingLocation>$(Configuration)/</AssemblerListingLocation>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>../../../third_party/directxsdk/files/Lib/x86;../../../third_party/platformsdk_win7/files/Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\Release\libcef.lib;..\libcef_dll\Release\libcef_dll_wrapper.lib;comctl32.lib;rpcrt4.lib;shlwapi.lib;..\Release\cef_sandbox.lib;..\Release\jsoncpp.lib;dbghelp.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;comctl32.lib;rpcrt4.lib;shlwapi.lib;dbghelp.lib;psapi.lib;..\$(Configuration)\JWebTopCommon.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
       <DelayLoadDLLs>
@@ -293,7 +292,7 @@
       </EnableCOMDATFolding>
       <FixedBaseAddress>
       </FixedBaseAddress>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(ProjectDir)$(Configuration)\$(ProjectName).lib</ImportLibrary>
       <MapFileName>
       </MapFileName>
@@ -429,48 +428,79 @@
       <PreprocessorDefinitions>TBROWSERENTRY_EXPORTS;_WIN32_WINNT=0x0601;WINVER=0x0601;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_HAS_EXCEPTIONS=0;_SECURE_ATL;CHROMIUM_BUILD;TOOLKIT_VIEWS=1;ENABLE_REMOTING=1;ENABLE_P2P_APIS=1;ENABLE_CONFIGURATION_POLICY;ENABLE_INPUT_SPEECH;ENABLE_NOTIFICATIONS;ENABLE_GPU=1;ENABLE_EGLIMAGE=1;USE_SKIA=1;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;ENABLE_REGISTER_PROTOCOL_HANDLER=1;ENABLE_WEB_INTENTS=1;ENABLE_PLUGIN_INSTALLATION=1;USING_CEF_SHARED;__STDC_FORMAT_MACROS;NO_TCMALLOC;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='发布版本|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..\third_party\wtl\include;.;..\..\..\third_party\directxsdk\files\Include;..\..\..\third_party\platformsdk_win7\files\Include;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /we4389 %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4351;4396;4503;4819;4100;4121;4125;4127;4130;4131;4189;4201;4238;4244;4245;4310;4355;4428;4481;4505;4510;4512;4530;4610;4611;4701;4702;4706;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>true</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>TBROWSERENTRY_EXPORTS;_WIN32_WINNT=0x0601;WINVER=0x0601;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_HAS_EXCEPTIONS=0;_SECURE_ATL;CHROMIUM_BUILD;TOOLKIT_VIEWS=1;ENABLE_REMOTING=1;ENABLE_P2P_APIS=1;ENABLE_CONFIGURATION_POLICY;ENABLE_INPUT_SPEECH;ENABLE_NOTIFICATIONS;ENABLE_GPU=1;ENABLE_EGLIMAGE=1;USE_SKIA=1;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;ENABLE_REGISTER_PROTOCOL_HANDLER=1;ENABLE_WEB_INTENTS=1;ENABLE_PLUGIN_INSTALLATION=1;USING_CEF_SHARED;__STDC_FORMAT_MACROS;NO_TCMALLOC;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>../../../third_party/directxsdk/files/Lib/x86;../../../third_party/platformsdk_win7/files/Lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;comctl32.lib;shlwapi.lib;rpcrt4.lib;opengl32.lib;glu32.lib;lib\$(Configuration)\libcef.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../third_party/directxsdk/files/Lib/x86;../../../third_party/platformsdk_win7/files/Lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+      <Profile>true</Profile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <DllDataFileName>dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../..;$(OutDir)obj/global_intermediate;..\..\..\third_party\wtl\include;.;..\..\..\third_party\directxsdk\files\Include;..\..\..\third_party\platformsdk_win7\files\Include;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>TBROWSERENTRY_EXPORTS;_WIN32_WINNT=0x0601;WINVER=0x0601;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_HAS_EXCEPTIONS=0;_SECURE_ATL;CHROMIUM_BUILD;TOOLKIT_VIEWS=1;ENABLE_REMOTING=1;ENABLE_P2P_APIS=1;ENABLE_CONFIGURATION_POLICY;ENABLE_INPUT_SPEECH;ENABLE_NOTIFICATIONS;ENABLE_GPU=1;ENABLE_EGLIMAGE=1;USE_SKIA=1;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;ENABLE_REGISTER_PROTOCOL_HANDLER=1;ENABLE_WEB_INTENTS=1;ENABLE_PLUGIN_INSTALLATION=1;USING_CEF_SHARED;__STDC_FORMAT_MACROS;NO_TCMALLOC;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\JWebTop\browser\JWebTopApp.h" />
-    <ClInclude Include="..\JWebTop\browser\JWebTopClient.h" />
-    <ClInclude Include="..\JWebTop\browser\JWebTopCommons.h" />
-    <ClInclude Include="..\JWebTop\jshandler\JJH_Windows.h" />
-    <ClInclude Include="..\JWebTop\jshandler\JWebTopJSHanlder.h" />
-    <ClInclude Include="..\JWebTop\json\assertions.h" />
-    <ClInclude Include="..\JWebTop\json\autolink.h" />
-    <ClInclude Include="..\JWebTop\json\config.h" />
-    <ClInclude Include="..\JWebTop\json\features.h" />
-    <ClInclude Include="..\JWebTop\json\forwards.h" />
-    <ClInclude Include="..\JWebTop\json\json.h" />
-    <ClInclude Include="..\JWebTop\json\reader.h" />
-    <ClInclude Include="..\JWebTop\json\value.h" />
-    <ClInclude Include="..\JWebTop\json\version.h" />
-    <ClInclude Include="..\JWebTop\json\writer.h" />
-    <ClInclude Include="..\JWebTop\tests\TestUtil.h" />
-    <ClInclude Include="..\JWebTop\util\StrUtil.h" />
-    <ClInclude Include="..\JWebTop\winctrl\JWebTopConfigs.h" />
-    <ClInclude Include="..\JWebTop\winctrl\JWebTopWinCtrl.h" />
+    <ClInclude Include="fastipc\org_fastipc_FastIPCNative.h" />
     <ClInclude Include="javautils.h" />
-    <ClInclude Include="jwebtop_brige.h" />
     <ClInclude Include="org_jwebtop_JWebTopNative.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\JWebTop\browser\JWebTopApp.cpp" />
-    <ClCompile Include="..\JWebTop\browser\JWebTopClient.cc" />
-    <ClCompile Include="..\JWebTop\browser\JWebTopCommons.cpp" />
-    <ClCompile Include="..\JWebTop\browser\JWebTopRenderer.cc" />
-    <ClCompile Include="..\JWebTop\jshandler\JWebTopJSHanlder.cpp" />
-    <ClCompile Include="..\JWebTop\JWebTop_main.cpp" />
-    <ClCompile Include="..\JWebTop\tests\TestUtil.cpp" />
-    <ClCompile Include="..\JWebTop\util\StrUtil.cpp" />
-    <ClCompile Include="..\JWebTop\winctrl\JWebTopConfigs.cpp" />
-    <ClCompile Include="..\JWebTop\winctrl\JWebTopWinCtrl.cpp" />
-    <ClCompile Include="jwebtop.cpp" />
+    <ClCompile Include="fastipc\FastIPC_JNI.cpp" />
+    <ClCompile Include="javautils.cpp" />
+    <ClCompile Include="jwebtop_jni.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="jni_jdk1_6_24\jawt.h" />
-    <ClInclude Include="jni_jdk1_6_24\jawt_md.h" />
     <ClInclude Include="jni_jdk1_6_24\jni.h" />
     <ClInclude Include="jni_jdk1_6_24\jni_md.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\JWebTop_DLL\JWebTop_DLL.vcxproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JWebTopCommon\JWebTopCommon.vcxproj">
+      <Project>{6bd8e842-723a-47ba-83a4-fa357465dc13}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

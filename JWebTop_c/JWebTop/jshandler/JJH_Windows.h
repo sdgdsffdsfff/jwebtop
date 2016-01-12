@@ -5,7 +5,9 @@
 #include <string>
 #include "include/cef_app.h" 
 #include "JWebTopJSHanlder.h"
-#include "JWebTop/winctrl/JWebTopWinCtrl.h"
+#include "common/winctrl/JWebTopWinCtrl.h"
+#include "JWebTop/dllex/JWebTop_DLLEx.h"
+#include "JWebTop/wndproc/JWebTopWndProc.h"
 
 // JJH=JWebTop JavaScriptHandler
 
@@ -76,7 +78,7 @@ class JJH_SetBound : public CefV8Handler {
 public:
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
 		if (arguments.size() < 4)return false;
-		jw::setBound(getHWND(object, arguments, 4), arguments[1]->GetIntValue(), arguments[2]->GetIntValue(), arguments[3]->GetIntValue(), arguments[4]->GetIntValue());
+		jw::setBound(getHWND(object, arguments, 4), arguments[0]->GetIntValue(), arguments[1]->GetIntValue(), arguments[2]->GetIntValue(), arguments[3]->GetIntValue());
 		return true;
 	}
 private:
@@ -90,8 +92,8 @@ public:
 		retval = CefV8Value::CreateObject(NULL);
 		retval->SetValue("x", CefV8Value::CreateInt(rt.left), V8_PROPERTY_ATTRIBUTE_NONE);
 		retval->SetValue("y", CefV8Value::CreateInt(rt.top), V8_PROPERTY_ATTRIBUTE_NONE);
-		retval->SetValue("width", CefV8Value::CreateInt(rt.right), V8_PROPERTY_ATTRIBUTE_NONE);
-		retval->SetValue("height", CefV8Value::CreateInt(rt.bottom), V8_PROPERTY_ATTRIBUTE_NONE);
+		retval->SetValue("width", CefV8Value::CreateInt(rt.right - rt.left), V8_PROPERTY_ATTRIBUTE_NONE);
+		retval->SetValue("height", CefV8Value::CreateInt(rt.bottom - rt.top), V8_PROPERTY_ATTRIBUTE_NONE);
 		return true;
 	}
 private:
@@ -123,7 +125,7 @@ private:
 class JJH_Close : public CefV8Handler {
 public:
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
-		jw::close(getHWND(object, arguments, 0));
+		jb::close(getHWND(object, arguments, 0));
 		return true;
 	}
 private:
@@ -164,7 +166,7 @@ private:
 class JJH_Max : public CefV8Handler {
 public:
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
-		jw::max(getHWND(object, arguments, 0));
+		jw::maxWin(getHWND(object, arguments, 0));
 		return true;
 	}
 private:
@@ -200,25 +202,35 @@ public:
 private:
 	IMPLEMENT_REFCOUNTING(JJH_SetTopMost);
 };
-//setWindowStyle(exStyle, handler);//高级函数，设置窗口额外属性，诸如置顶之类。
+//setWindowStyle(style, handler);//高级函数，设置窗口额外属性，诸如置顶之类。
 class JJH_SetWindowStyle : public CefV8Handler {
 public:
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
 		if (arguments.size() < 1)return false;
-		jw::setWindowStyle(getHWND(object, arguments, 1), arguments[0]->GetIntValue());
+		jw::setWindowStyle(getHWND(object, arguments, 2), arguments[0]->GetIntValue());
 		return true;
 	}
 private:
 	IMPLEMENT_REFCOUNTING(JJH_SetWindowStyle);
 };
-
+//setWindowStyle(exStyle, handler);//高级函数，设置窗口额外属性，诸如置顶之类。
+class JJH_SetWindowExStyle : public CefV8Handler {
+public:
+	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
+		if (arguments.size() < 1)return false;
+		jw::setWindowExStyle(getHWND(object, arguments, 1), arguments[0]->GetIntValue());
+		return true;
+	}
+private:
+	IMPLEMENT_REFCOUNTING(JJH_SetWindowExStyle);
+};
 
 //loadUrl(url, handler);//加载网页，url为网页路径
 class JJH_LoadUrl : public CefV8Handler {
 public:
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
 		if (arguments.size() < 1)return false;
-		jw::loadUrl(getHWND(object, arguments, 1), arguments[0]->GetStringValue().ToWString());
+		jb::loadUrl(getHWND(object, arguments, 1), arguments[0]->GetStringValue().ToWString());
 		return true;
 	}
 private:
@@ -228,7 +240,7 @@ private:
 class JJH_Reload : public CefV8Handler {
 public:
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
-		jw::reload(getHWND(object, arguments, 0));
+		jb::reload(getHWND(object, arguments, 0));
 		return true;
 	}
 private:
@@ -239,7 +251,7 @@ private:
 class JJH_ReloadIgnoreCache : public CefV8Handler {
 public:
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
-		jw::reloadIgnoreCache(getHWND(object, arguments, 0));
+		jb::reloadIgnoreCache(getHWND(object, arguments, 0));
 		return true;
 	}
 private:
@@ -249,24 +261,124 @@ private:
 class JJH_ShowDev : public CefV8Handler {
 public:
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
-		jw::showDev(getHWND(object, arguments, 0));
+		jb::showDev(getHWND(object, arguments, 0));
 		return true;
 	}
 private:
 	IMPLEMENT_REFCOUNTING(JJH_ShowDev);
 };
 
-#ifdef JWebTopJNI // 只有在JWebTop_JNI项目下，下面的代码才会编译
-//invokeJava(jsonstring);// 从JS调用Java代码
-class JJH_InvokeJava : public CefV8Handler {
+//invokeRemote_CallBack(jsonstring,callback,[handler]);// 从JS调用远程进程代码
+class JJH_InvokeRemote_CallBack : public CefV8Handler {
 public:
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
-		if (arguments.size() < 1)return false;
-		retval = CefV8Value::CreateString(jw::invokeJavaMethod(arguments[0]->GetStringValue()));
+		if (arguments.size() < 2){
+			exception = (L"invokeRemote_CallBack(jsonstring,callback,[handler])需要至少两个参数");
+			return true;
+		}
+		if (!arguments[1]->IsString()){
+			exception = (L"第二个参数必须是字符串");
+			return true;
+		}
+		string callback = arguments[1]->GetStringValue().ToString();
+		int size = callback.size();
+		if (size == 0){
+			exception = (L"第二个参数不能是空字符串");
+			return true;
+		}
+		if (size > 100){
+			exception = (L"第二个参数长度不能超过100");
+			return true;
+		}
+		jw::dllex::invokeRemote_CallBack(getHWND(object, arguments, 2), arguments[0]->GetStringValue(), callback);
 		return true;
 	}
 private:
-	IMPLEMENT_REFCOUNTING(JJH_InvokeJava);
+	IMPLEMENT_REFCOUNTING(JJH_InvokeRemote_CallBack);
 };
-#endif
+
+//JJH_InvokeRemote_NoWait(jsonstring,[handler]);// 从JS调用远程进程代码
+class JJH_InvokeRemote_NoWait : public CefV8Handler {
+public:
+	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
+		if (arguments.size() < 1)return false;
+		jw::dllex::invokeRemote_NoWait(getHWND(object, arguments, 1), arguments[0]->GetStringValue());
+		return true;
+	}
+private:
+	IMPLEMENT_REFCOUNTING(JJH_InvokeRemote_NoWait);
+};
+
+//JJH_enableDrag(enable);// 允许进行拖动
+class JJH_enableDrag : public CefV8Handler {
+public:
+	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
+		jb::enableDrag(getHWND(object, arguments, 10000), arguments[0]->GetBoolValue());
+		return true;
+	}
+private:
+	IMPLEMENT_REFCOUNTING(JJH_enableDrag);
+};
+
+//JJH_startDrag();// 开始进行拖动
+class JJH_startDrag : public CefV8Handler {
+public:
+	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
+		jb::startDrag(getHWND(object, arguments, 10000));
+		return true;
+	}
+private:
+	IMPLEMENT_REFCOUNTING(JJH_startDrag);
+};
+//JJH_stopDrag([handler]);// 停止拖动
+class JJH_stopDrag : public CefV8Handler {
+public:
+	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
+		jb::stopDrag(getHWND(object, arguments, 10000));
+		return true;
+	}
+private:
+	IMPLEMENT_REFCOUNTING(JJH_stopDrag);
+};
+
+
+////invokeReflect(function(v){});// 测试回调js的function
+//class JJH_invokeReflect : public CefV8Handler {
+//public:
+//	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception) {
+//		CefV8ValueList args;
+//		std::string jsons = "{\"a\":\"a\",\"b\":1234}";
+//		CefRefPtr<CefV8Value> v = CefV8Value::CreateString(jsons);
+//		args.push_back(v);
+//		CefRefPtr<CefV8Value> fun = arguments[0];
+//		fun->ExecuteFunction(object, args);
+//		return true;
+//	}
+//private:
+//	IMPLEMENT_REFCOUNTING(JJH_invokeReflect);
+//};
+
+namespace jw{
+	namespace js{
+		namespace events{
+			// 发送页面准备好事件：new CustomEvent('JWebTopReady')
+			void sendReadey(const CefRefPtr<CefFrame> frame);
+
+			// 页面内的子页面（iframe）准备好事件：new CustomEvent('JWebTopIFrameReady')
+			void sendIFrameReady(const CefRefPtr<CefFrame> frame);
+
+			// 发送窗口大小改变事件:new CustomEvent('JWebTopResize',{detail:{w:宽度数值,h:高度数值}})
+			void sendSize(const CefRefPtr<CefFrame> frame, const int w, const int h);
+
+			// 发送窗口位置改变事件:new CustomEvent('JWebTopMove',{detail:{x:X坐标值,y:Y坐标值}})
+			void sendMove(const CefRefPtr<CefFrame> frame, const int x, const int y);
+	
+			// 发送窗口被激活事件:new CustomEvent('JWebTopWindowActive',{detail:{handler:被激活的窗口的句柄}})
+			void sendWinowActive(const CefRefPtr<CefFrame> frame, const long handler, const DWORD state);
+
+			// 发送应用（一个应用可能有多个窗口）被激活事件:new CustomEvent('JWebTopAppActive',{detail:{handler:除非此消息的窗口的句柄}})
+			void sendAppActive(const CefRefPtr<CefFrame> frame, const long handler);
+			}
+	}
+}
 #endif

@@ -7,40 +7,37 @@
     <Filter Include="jwebtop\jshandler">
       <UniqueIdentifier>{b43e101a-d11f-47ba-9172-474cd600a5bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="jwebtop\winctrl">
-      <UniqueIdentifier>{8e52f096-6ad9-4287-b714-d40b4cfd37e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="jwebtop\browser">
       <UniqueIdentifier>{aa6858b3-c3c5-422c-89f2-74b424b0bc69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="jwebtop\util">
-      <UniqueIdentifier>{4a962bb5-b67c-4460-88f0-5e9f40f0b1f2}</UniqueIdentifier>
+    <Filter Include="common">
+      <UniqueIdentifier>{eafbce3d-04a9-4074-b61c-bf066c5b9e97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="jwebtop\tests">
-      <UniqueIdentifier>{83533c7e-2865-45c2-b014-6db11f2d7f63}</UniqueIdentifier>
+    <Filter Include="jwebtop\config">
+      <UniqueIdentifier>{0ca933e2-3234-4412-acc4-b3d0c2bd5ae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="jwebtop\wndproc">
+      <UniqueIdentifier>{a5a0abef-2d58-4034-adb1-b568f42e7dc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="jwebtop\dllex">
+      <UniqueIdentifier>{42e6ccac-b7cd-4ab1-b032-e94d31986cb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ui">
+      <UniqueIdentifier>{b3c4cf95-8bec-4612-aaa1-e8000053aa89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\ui\dlgs">
+      <UniqueIdentifier>{f3ddc2ec-b80b-4f5d-b664-70edf456deaf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JWebTop_main.cpp">
       <Filter>jwebtop</Filter>
     </ClCompile>
-    <ClCompile Include="winctrl\JWebTopWinCtrl.cpp">
-      <Filter>jwebtop\winctrl</Filter>
-    </ClCompile>
     <ClCompile Include="browser\JWebTopRenderer.cc">
       <Filter>jwebtop\browser</Filter>
     </ClCompile>
-    <ClCompile Include="winctrl\JWebTopConfigs.cpp">
-      <Filter>jwebtop\winctrl</Filter>
-    </ClCompile>
     <ClCompile Include="browser\JWebTopCommons.cpp">
       <Filter>jwebtop\browser</Filter>
-    </ClCompile>
-    <ClCompile Include="util\StrUtil.cpp">
-      <Filter>jwebtop\util</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\TestUtil.cpp">
-      <Filter>jwebtop\tests</Filter>
     </ClCompile>
     <ClCompile Include="browser\JWebTopApp.cpp">
       <Filter>jwebtop\browser</Filter>
@@ -51,19 +48,37 @@
     <ClCompile Include="jshandler\JWebTopJSHanlder.cpp">
       <Filter>jwebtop\jshandler</Filter>
     </ClCompile>
+    <ClCompile Include="config\JWebTopConfigs.cpp">
+      <Filter>jwebtop\config</Filter>
+    </ClCompile>
+    <ClCompile Include="wndproc\JWebTopWndProc.cpp">
+      <Filter>jwebtop\wndproc</Filter>
+    </ClCompile>
+    <ClCompile Include="browser\JWebTopContext.cc">
+      <Filter>jwebtop\browser</Filter>
+    </ClCompile>
+    <ClCompile Include="jshandler\JSDialogHandler.cc">
+      <Filter>jwebtop\jshandler</Filter>
+    </ClCompile>
+    <ClCompile Include="browser\JWebTopScheme.cpp">
+      <Filter>jwebtop\browser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\ui\dlgs\InputDialog.cpp">
+      <Filter>common\ui\dlgs</Filter>
+    </ClCompile>
+    <ClCompile Include="dllex\DLLExState.cpp">
+      <Filter>jwebtop\dllex</Filter>
+    </ClCompile>
+    <ClCompile Include="dllex\DLLEx_Renderer.cpp">
+      <Filter>jwebtop\dllex</Filter>
+    </ClCompile>
+    <ClCompile Include="dllex\DLLEx_Browser.cpp">
+      <Filter>jwebtop\dllex</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="winctrl\JWebTopWinCtrl.h">
-      <Filter>jwebtop\winctrl</Filter>
-    </ClInclude>
-    <ClInclude Include="winctrl\JWebTopConfigs.h">
-      <Filter>jwebtop\winctrl</Filter>
-    </ClInclude>
     <ClInclude Include="browser\JWebTopCommons.h">
       <Filter>jwebtop\browser</Filter>
-    </ClInclude>
-    <ClInclude Include="util\StrUtil.h">
-      <Filter>jwebtop\util</Filter>
     </ClInclude>
     <ClInclude Include="browser\JWebTopApp.h">
       <Filter>jwebtop\browser</Filter>
@@ -77,8 +92,32 @@
     <ClInclude Include="jshandler\JJH_Windows.h">
       <Filter>jwebtop\jshandler</Filter>
     </ClInclude>
-    <ClInclude Include="tests\TestUtil.h">
-      <Filter>jwebtop\tests</Filter>
+    <ClInclude Include="config\JWebTopConfigs.h">
+      <Filter>jwebtop\config</Filter>
+    </ClInclude>
+    <ClInclude Include="wndproc\JWebTopWndProc.h">
+      <Filter>jwebtop\wndproc</Filter>
+    </ClInclude>
+    <ClInclude Include="dllex\JWebTop_DLLEx.h">
+      <Filter>jwebtop\dllex</Filter>
+    </ClInclude>
+    <ClInclude Include="browser\JWebTopContext.h">
+      <Filter>jwebtop\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="jshandler\JSDialogHandler.h">
+      <Filter>jwebtop\jshandler</Filter>
+    </ClInclude>
+    <ClInclude Include="browser\JWebTopScheme.h">
+      <Filter>jwebtop\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\ui\dlgs\InputDialog.h">
+      <Filter>common\ui\dlgs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\JWebTopMsg.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="dllex\DLLExState.h">
+      <Filter>jwebtop\dllex</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

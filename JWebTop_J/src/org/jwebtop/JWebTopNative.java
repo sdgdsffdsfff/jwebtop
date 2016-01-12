@@ -1,155 +1,82 @@
 package org.jwebtop;
 
 import java.awt.Component;
-import java.io.File;
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import java.awt.peer.ComponentPeer;
 
 /**
- * 与JWebTop交互的JNI接口java端
+ * 操作Windows窗口的JNI接口java端 <br>
+ * 源码：https://github.com/washheart/jwebtop<br>
+ * 说明：https://github.com/washheart/jwebtop/wiki<br>
  * 
  * @author washheart@163.com
  */
 public final class JWebTopNative {
-	// private static native void nCreateJWebTop(String appfile, long parenHwnd);
 
-	private static native void nCreateJWebTop(String appfile, long parenHwnd, String url, String title, String icon, int x, int y, int w, int h);
+	private static native long nSetActiveWindow(long hWnd);
 
-	private static native void nExecuteJs(long broserHWnd, String json);
+	private static native long nCreateSubProcess(String subProcess, String szCmdLine, boolean waitFor);
+
+	private static native long nGetProcessID();
 
 	private static native void nSetSize(long browserHwnd, int w, int h);
 
+	private static native int[] nGetSize(long browserHwnd);
+
+	private static native int[] nGetScreenSize();
+
 	private static native void nSetLocation(long browserHwnd, int xOnScreen, int yOnScreen);
+
+	private static native int[] nGetLocation(long browserHwnd);
 
 	private static native void nSetBound(long browserHwnd, int xOnScreen, int yOnScreen, int w, int h);
 
-	private static native void nSetUrl(long browserHwnd, String url);
+	private static native int[] nGetBound(long browserHwnd);
 
-	private final static JWebTopNative INSTANCE = new JWebTopNative();
+	private static native int[] nGetWindowClient(long browserHwnd);
 
-	private final class CreateBrowserLocker {
-		long hwnd = 0L;
-	}
+	private static native void nBringToTop(long browserHWnd);
 
-	private boolean waitLock = false;
-	private final CreateBrowserLocker locker = new CreateBrowserLocker();
-	private JWebtopJSONDispater jsonHandler = null;
+	private static native void nFocus(long browserHWnd);
 
-	public static JWebTopNative getInstance() {
-		return INSTANCE;
-	}
+	private static native void nHide(long browserHWnd);
+
+	private static native void nMax(long browserHWnd);
+
+	private static native void nMini(long browserHWnd);
+
+	private static native void nRestore(long browserHWnd);
+
+	private static native boolean nIsVisible(long browserHWnd);
+
+	private static native void nSetWindowStyle(long browserHWnd, int style);
+
+	private static native void nSetWindowExStyle(long browserHWnd, int exStyle);
+
+	private static native void nSetTopMost(long browserHWnd);
 
 	private JWebTopNative() {}
 
-	/**
-	 * 创建JWebTop浏览器
-	 * 
-	 * @param appfile
-	 * @return
-	 */
-	public long createJWebTop(String appfile, final long parenHwnd) throws IOException {
-		return createJWebTop(appfile, parenHwnd, null, null, null, -1, -1, -1, -1);
-	}
-
-	public long createJWebTop(String appfile, final long parenHwnd
-	// 以下参数会替换appfile中的相应参数
-			, final String url // --------要打开的链接地址
-			, final String title // ------窗口名称
-			, final String icon // -------窗口图标
-			, final int x, final int y // 窗口左上角坐标,当值为-1时不启用此变量
-			, final int w, final int h // 窗口的宽、高，当值为-1时不启用此变量
-	) throws IOException {
-		final String appfile2 = new File(appfile).getCanonicalPath();// 如果不是绝对路径，浏览器无法显示出来
-		new Thread() {
-			@Override
-			public void run() {
-				nCreateJWebTop(appfile2, parenHwnd, url, title, icon, x, y, w, h);
-			}
-		}.start();
-		synchronized (locker) {
-			try {
-				waitLock = true;
-				locker.wait();
-				waitLock = false;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} finally {
-				waitLock = false;
-			}
-		}
-		return locker.hwnd;
-	}
-
-	public long createJWebTop(String appfile) throws IOException {
-		return createJWebTop(appfile, 0);
+	public static void setActiveWindow(long hWnd) {
+		nSetActiveWindow(hWnd);
 	}
 
 	/**
-	 * 执行js。<br/>
-	 * 这里发送是包装的JSON数据，而不是具体的js方法，返回的也是JSON数据
+	 * 创建一个新进程
 	 * 
-	 * @param json
-	 * @return
+	 * @param subProcess
+	 *            新进程执行的可执行文件
+	 * @param szCmdLine
+	 *            命令行参数
+	 * @param waitFor
+	 *            是否等待进程结束再返回
+	 * @return waitFor=true时返回0，否则返回的数据为进程中主线程的id
 	 */
-	public static void executeJs(long browserHWnd, String script) {
-		nExecuteJs(browserHWnd, script);
+	public static long createSubProcess(String subProcess, String szCmdLine, boolean waitFor) {
+		return nCreateSubProcess(subProcess, szCmdLine, waitFor);
 	}
 
-	String dispatch(String json) throws IOException {
-		if (json.startsWith("@")) {// 约定通过特殊标记来进行处理
-			long rootBrowserHwnd = 0;
-			JsonFactory f = new JsonFactory();
-			JsonParser p = f.createParser(json.substring(1));
-			JsonToken result = null;
-			while ((result = p.nextToken()) != null) {
-				if (result == JsonToken.FIELD_NAME) {
-					String field = p.getText();
-					p.nextToken();
-					if ("hwnd".equals(field)) {
-						rootBrowserHwnd = p.getLongValue();
-						break;
-					}
-				}
-			}
-			p.close();
-			if (waitLock) synchronized (locker) {
-				locker.hwnd = rootBrowserHwnd;
-				locker.notify();// FIXME:通知解锁的时机需要控制
-			}
-		} else if (jsonHandler != null) {
-			String rtn = jsonHandler.dispatcher(json);
-			System.out.println("rtn = " + rtn);
-			return rtn;
-		}
-		return "";
-	}
-
-	public void setJsonHandler(JWebtopJSONDispater jsonHandler) {
-		this.jsonHandler = jsonHandler;
-	}
-
-	/**
-	 * 此方法不可以被混淆，其会被DLL调用
-	 * 
-	 * @param json
-	 * @return
-	 */
-	private static String invokeByJS(String json) {
-		try {
-			// StringBuilder sb = new StringBuilder(json);
-			System.out.println("从dll端发起的调用 = " + json);
-			// INSTANCE.dispatch(json);
-			// sb.reverse();
-			// System.out.println("\t\t准备返回的结果 = " + sb);
-			// return sb.toString();
-			return INSTANCE.dispatch(json);
-		} catch (Throwable e) {
-			e.printStackTrace();
-			return "{success:false,msg:\"调用Java失败" + e.getMessage() + "\"}";
-		}
+	public static long getProcessID() {
+		return nGetProcessID();
 	}
 
 	/**
@@ -164,6 +91,25 @@ public final class JWebTopNative {
 	}
 
 	/**
+	 * 得到指定窗口的大小
+	 * 
+	 * @param browserHwnd
+	 * @return int[0]=宽，int[1]=高
+	 */
+	public static int[] getSize(long browserHwnd) {
+		return nGetSize(browserHwnd);
+	}
+
+	/**
+	 * 得到屏幕可用区域的大小
+	 * 
+	 * @return int[0]=宽，int[1]=高
+	 */
+	public static int[] getScreenSize() {
+		return nGetScreenSize();
+	}
+
+	/**
 	 * 设置指定窗口的位置
 	 * 
 	 * @param browserHwnd
@@ -172,6 +118,16 @@ public final class JWebTopNative {
 	 */
 	public static void setLocation(long browserHwnd, int xOnScreen, int yOnScreen) {
 		if (browserHwnd != 0) nSetLocation(browserHwnd, xOnScreen, yOnScreen);
+	}
+
+	/**
+	 * 得到窗口在屏幕上的位置
+	 * 
+	 * @param browserHwnd
+	 * @return int[0]=x，int[1]=y
+	 */
+	public static int[] getLocation(long browserHwnd) {
+		return nGetLocation(browserHwnd);
 	}
 
 	/**
@@ -187,8 +143,62 @@ public final class JWebTopNative {
 		if (browserHwnd != 0) nSetBound(browserHwnd, xOnScreen, yOnScreen, w, h);
 	}
 
-	public static void setUrl(long browserHwnd, String url) {
-		if (browserHwnd != 0) nSetUrl(browserHwnd, url);
+	/**
+	 * 得到窗口在屏幕的坐标信息
+	 * 
+	 * @param browserHwnd
+	 * @return int[0]=x，int[1]=y，int[2]=宽，int[3]=高
+	 */
+	public static int[] getBound(long browserHwnd) {
+		return nGetBound(browserHwnd);
+	}
+
+	// 窗口移到最顶层
+	public static void bringToTop(long browserHWnd) {
+		nBringToTop(browserHWnd);
+	}
+
+	// 使窗口获得焦点
+	public static void focus(long browserHWnd) {
+		nBringToTop(browserHWnd);
+	}
+
+	// 隐藏窗口
+	public static void hide(long browserHWnd) {
+		nHide(browserHWnd);
+	}
+
+	// 最大化窗口
+	public static void max(long browserHWnd) {
+		nMax(browserHWnd);
+	}
+
+	// 最小化窗口
+	public static void mini(long browserHWnd) {
+		nMini(browserHWnd);
+	}
+
+	// 还原窗口，对应于hide函数
+	public static void restore(long browserHWnd) {
+		nRestore(browserHWnd);
+	}
+
+	// 检查窗口是否正在显示状态
+	public static boolean isVisible(long browserHWnd) {
+		return nIsVisible(browserHWnd);
+	}
+
+	// 窗口置顶，此函数跟bringToTop的区别在于此函数会使窗口永远置顶，除非有另外一个窗口调用了置顶函数
+	public static void setTopMost(long browserHWnd) {
+		nSetTopMost(browserHWnd);
+	}
+
+	public static void setWindowStyle(long browserHWnd, int style) {
+		nSetWindowStyle(browserHWnd, style);
+	}
+
+	public static void setWindowExStyle(long browserHWnd, int exStyle) {
+		nSetWindowExStyle(browserHWnd, exStyle);
 	}
 
 	/**
@@ -199,6 +209,19 @@ public final class JWebTopNative {
 	 * @return 控件windowsID
 	 */
 	public static long getWindowHWND(Component target) {
-		return ((sun.awt.windows.WComponentPeer/* 此类来自JDK，纯jre不行 */) target.getPeer()).getHWnd();
+		ComponentPeer peer = target.getPeer();
+		if (peer == null) return 0;
+		return ((sun.awt.windows.WComponentPeer/* 此类来自JDK，纯jre不行 */) peer).getHWnd();
+	}
+
+	/**
+	 * 获取指定窗口的客户区坐标信息，返回大小为4的数组，依次为右左上角x、y、右下角x、y
+	 * 
+	 * @param hWnd
+	 *            窗口句柄
+	 * @return int[left,top,right,bottom]
+	 */
+	public static int[] getWindowClient(long hWnd) {
+		return nGetWindowClient(hWnd);
 	}
 }
